@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log in</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a class="guest-only" href="login.html">Log in</a>
+      <a class="guest-only nav-cta" href="signup.html">Create account</a>
+      <a class="user-only hidden nav-cta" href="home.html">My Orgs</a>
+    </nav>
+  </header>
+
+  <main class="container narrow">
+    <section class="card">
+      <h1 id="login-title">Log in</h1>
+      <p class="muted" id="login-sub">Members, officers and the admin all log in here.</p>
+      <form id="login-form" novalidate>
+        <div class="field"><label for="email">Email</label>
+          <input id="email" type="email" autocomplete="username"></div>
+        <div class="field"><label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password"></div>
+        <button class="btn btn-block" type="submit" id="login-btn">Log in</button>
+      </form>
+      <p class="small muted" style="margin-top:14px">No account yet? <a href="signup.html">Create one</a></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan Attendance</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <span class="user-name" id="user-name"></span>
+      <a href="home.html">My Orgs</a>
+      <a href="account.html">Account</a>
+      <a href="admin.html" id="admin-link" class="hidden">Admin</a>
+      <button id="logout-btn" type="button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <p class="muted small" style="margin:0"><a id="back-link" href="home.html">&larr; Back to org</a> &middot; <span id="org-name"></span></p>
+          <h1 id="event-title" style="margin:0">Loading...</h1>
+          <div class="event-meta" id="event-meta"></div>
+        </div>
+        <a class="btn btn-outline" id="view-attendance-link" href="#">View attendance list</a>
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <section class="card">
+        <h2>QR scanner</h2>
+        <div id="reader"><div class="reader-placeholder">Camera is off.<br>Click "Start camera" to begin scanning.</div></div>
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:14px; flex-wrap:wrap">
+          <button class="btn" id="start-btn">Start camera</button>
+          <button class="btn btn-outline hidden" id="stop-btn">Stop camera</button>
+        </div>
+        <div class="scan-result result-idle" id="scan-result">
+          <div class="big">Ready to scan</div>
+          <div>Point the camera at a member's QR code.</div>
+        </div>
+        <form id="manual-form" style="margin-top:18px" novalidate>
+          <label for="manualNo">No QR? Enter student number manually</label>
+          <div style="display:flex; gap:8px">
+            <input id="manualNo" placeholder="e.g. 2023-00123" maxlength="20">
+            <button class="btn btn-outline" type="submit">Record</button>
+          </div>
+        </form>
+      </section>
+      <section>
+        <div class="card stat">
+          <div class="muted small">Attendees so far</div>
+          <div class="stat-number" id="live-count">0</div>
+        </div>
+        <div class="card">
+          <h2>Recent scans</h2>
+          <ul class="recent" id="recent-list"><li class="muted">No scans yet.</li></ul>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module" src="js/scanner.js"></script>
+</body>
+</html>

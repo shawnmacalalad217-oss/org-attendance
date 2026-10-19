@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a class="guest-only" href="login.html">Log in</a>
+      <a class="guest-only nav-cta" href="signup.html">Create account</a>
+      <a class="user-only hidden nav-cta" href="home.html">My Orgs</a>
+    </nav>
+  </header>
+
+  <main class="container narrow">
+    <section class="card">
+      <h1>Create an account</h1>
+      <p class="muted">One account for all organizations. Officers and members use the same account.</p>
+      <form id="signup-form" novalidate>
+        <div class="field"><label for="fullName">Full name</label>
+          <input id="fullName" placeholder="e.g. Juan A. Dela Cruz" maxlength="80" autocomplete="name"></div>
+        <div class="field"><label for="studentNo">Student number</label>
+          <input id="studentNo" placeholder="e.g. 2023-00123" maxlength="20">
+          <div class="hint">Letters, numbers and dashes only.</div></div>
+        <div class="field"><label for="courseYear">Course &amp; year</label>
+          <input id="courseYear" placeholder="e.g. BSCpE 4" maxlength="30"></div>
+        <div class="field"><label for="email">Email</label>
+          <input id="email" type="email" autocomplete="username"></div>
+        <div class="field"><label for="password">Password</label>
+          <input id="password" type="password" autocomplete="new-password">
+          <div class="hint">At least 6 characters.</div></div>
+        <label class="consent"><input type="checkbox" id="consent">
+          <span>I have read and agree to the <a href="privacy.html" target="_blank">Privacy Policy</a>, including how my name, student number, course &amp; year, email and attendance are used.</span></label>
+        <button class="btn btn-block" type="submit" id="signup-btn">Create account</button>
+      </form>
+      <p class="small muted" style="margin-top:14px">Already have an account? <a href="login.html">Log in</a></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module" src="js/signup.js"></script>
+</body>
+</html>

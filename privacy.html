@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a class="guest-only" href="login.html">Log in</a>
+      <a class="guest-only nav-cta" href="signup.html">Create account</a>
+      <a class="user-only hidden nav-cta" href="home.html">My Orgs</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <article class="card prose">
+      <h1>Privacy Policy</h1>
+      <p class="muted small">Last updated: <span data-policy-updated></span></p>
+      <p>This policy explains what information <strong data-site-name></strong> (“the website”, “we”) collects, why, who can see it, how long it is kept and what you can do about it. It describes how the website actually works. We follow the principles of the Philippine <strong>Data Privacy Act of 2012 (Republic Act No. 10173)</strong>: transparency, legitimate purpose and proportionality.</p>
+
+      <nav class="toc" aria-label="Contents">
+        <a href="#collect">1. What we collect</a><a href="#not-collect">2. What we do not collect</a>
+        <a href="#use">3. How we use it</a><a href="#who">4. Who can see it</a>
+        <a href="#third">5. Services we use</a><a href="#keep">6. How long we keep it</a>
+        <a href="#rights">7. Your rights and choices</a><a href="#security">8. Security</a>
+        <a href="#changes">9. Changes</a><a href="#contact">10. Contact</a>
+      </nav>
+
+      <h2 id="collect">1. Information we collect</h2>
+      <p>We only collect what you type in or what is created when you use the website:</p>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>Information</th><th>When it is collected</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Email address and password</strong></td><td>When you create an account. Your password is handled by Firebase Authentication and stored by Google in hashed form. We (the developers, officers and admin) can never see it.</td></tr>
+          <tr><td><strong>Full name, student number, course &amp; year</strong></td><td>When you create an account or edit your details on the My account page.</td></tr>
+          <tr><td><strong>Account dates</strong></td><td>The date your account was created and the date you agreed to this policy.</td></tr>
+          <tr><td><strong>Memberships</strong></td><td>When you register in an organization: the organization, your role (Member, Secretary, Treasurer, Vice President or President), the date you registered or re-registered, and the membership length (1 year). A copy of your name, student number and course &amp; year is saved with the membership so officers can identify you.</td></tr>
+          <tr><td><strong>Attendance records</strong></td><td>When an officer scans your QR code (or types your student number) at an event: the event name and date, your time-in, and a copy of your name, student number and course &amp; year as they were at that moment.</td></tr>
+          <tr><td><strong>Organization requests</strong></td><td>If you ask to create an organization: the organization name and description, plus your name, student number, course &amp; year and email so the admin knows who is asking.</td></tr>
+          <tr><td><strong>Events</strong></td><td>Officers enter event names, dates and venues. These are about the organization, not about you.</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>Your QR code</strong> contains only your random account ID (for example <code>OEA:</code> followed by letters and numbers). It does not contain your name, student number or email. It is drawn by your own browser and is not stored by us as an image.</p>
+
+      <h2 id="not-collect">2. What we do not collect</h2>
+      <ul>
+        <li>No photos or video. The scanner page uses the officer's camera only to read QR codes, live in the browser. No camera image is saved or uploaded.</li>
+        <li>No location (GPS), contacts, phone number, birthday, address or ID pictures.</li>
+        <li>No analytics, tracking pixels or advertising. We do not set advertising or tracking cookies.</li>
+        <li>Firebase keeps you logged in by saving a login token in your browser's storage. This is needed for login to work and is removed when you log out.</li>
+      </ul>
+
+      <h2 id="use">3. How we use your information</h2>
+      <ul>
+        <li>To create your account and log you in.</li>
+        <li>To register you in organizations, show your membership status and tell you when your 1-year membership expires.</li>
+        <li>To record your attendance at events and show you the events you attended.</li>
+        <li>To let officers manage members (assign roles, remove members, transfer presidency) and export attendance lists for their organization.</li>
+        <li>To let the admin review organization requests and limit the number of organizations.</li>
+      </ul>
+      <p>We do <strong>not</strong> sell, rent or share your information for marketing, and we do not use it for any purpose other than those listed above.</p>
+
+      <h2 id="who">4. Who can see your information</h2>
+      <p>Access is enforced by Firebase security rules on the database, not only by hiding buttons.</p>
+      <ul>
+        <li><strong>You</strong> can see your own profile, memberships and attendance records.</li>
+        <li><strong>Officers</strong> (President, Vice President, Secretary and Treasurer) of an organization you joined can see that organization's member list (your name, student number, course &amp; year, role and registration date) and its attendance records. Officers of organizations you did not join cannot see your details.</li>
+        <li><strong>Other members</strong> cannot see the member list or other people's attendance.</li>
+        <li><strong>The site admin</strong> can see all data in order to run the website, approve organization requests and fix problems.</li>
+        <li>Officers can <strong>download attendance as a CSV file</strong>. Once downloaded, that file is the responsibility of the officer and their organization.</li>
+        <li>Any logged-in user can see the list of organizations (names and descriptions), but not their members.</li>
+      </ul>
+
+      <h2 id="third">5. Services we use</h2>
+      <ul>
+        <li><strong>Google Firebase</strong> (Authentication and Cloud Firestore) stores the data described above. Database location: <span data-data-region></span>. Google may process technical data such as IP addresses to provide and secure the service. See <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase privacy and security</a>.</li>
+        <li><strong>GitHub Pages</strong> hosts the website files. Like any web host, GitHub may log visitors' IP addresses for security. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement</a>.</li>
+        <li>Code libraries for the QR code and scanner are loaded from public content networks (gstatic.com, cdnjs.cloudflare.com, unpkg.com). These servers receive your IP address when your browser downloads the files, but they receive none of your account data.</li>
+      </ul>
+
+      <h2 id="keep">6. How long we keep information</h2>
+      <ul>
+        <li><strong>Account and profile:</strong> until you delete your account.</li>
+        <li><strong>Memberships:</strong> a membership expires 1 year after you register or re-register. The expired record stays (marked “Expired”) so you can re-register, until you are removed by an officer, you leave, or you delete your account.</li>
+        <li><strong>Attendance records:</strong> kept as the organization's official record until officers delete the event or the admin deletes the organization. They are <strong>not</strong> removed when you delete your account or edit your details, because organizations need accurate past records. You can ask the organization's officers or the project team to delete them.</li>
+        <li><strong>Organization requests:</strong> pending or rejected requests are deleted when you cancel them or delete your account. Approved requests are kept as the admin's record of who created each organization.</li>
+      </ul>
+
+      <h2 id="rights">7. Your rights and choices</h2>
+      <p>Under the Data Privacy Act you have the right to be informed, to access, to correct, to object and to have your data erased. On the website you can:</p>
+      <ul>
+        <li><strong>See</strong> your memberships and attended events on your organization pages.</li>
+        <li><strong>Correct</strong> your name, student number and course &amp; year on the <a href="account.html">My account</a> page. The change also updates your memberships.</li>
+        <li><strong>Download</strong> a copy of your data (JSON file) on the My account page.</li>
+        <li><strong>Delete</strong> your account on the My account page. This deletes your login, profile, memberships and any pending organization request. A President must transfer the presidency first.</li>
+        <li><strong>Reset</strong> your password by email.</li>
+      </ul>
+      <p>For anything you cannot do yourself, such as removing past attendance records, contact us (see below).</p>
+
+      <h2 id="security">8. Security</h2>
+      <p>All pages use HTTPS. Passwords are managed by Firebase Authentication. Database access rules check every read and write, for example only the President and Vice President can change roles, and only officers can record attendance. No system is perfectly secure, so please use a strong password that you do not use anywhere else, and log out on shared computers.</p>
+      <p>The website is meant for university students. It was built as a student course project for <span data-university-name></span> organizations.</p>
+
+      <h2 id="changes">9. Changes to this policy</h2>
+      <p>If the way the website handles data changes, we will update this page and the “Last updated” date above.</p>
+
+      <h2 id="contact">10. Contact</h2>
+      <p>For questions or requests about your data, contact <a data-contact-email></a>.</p>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module">import { checkConfig } from "./js/common.js"; checkConfig();</script>
+</body>
+</html>

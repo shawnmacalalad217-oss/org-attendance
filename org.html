@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organization</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <span class="user-name" id="user-name"></span>
+      <a href="home.html">My Orgs</a>
+      <a href="account.html">Account</a>
+      <a href="admin.html" id="admin-link" class="hidden">Admin</a>
+      <button id="logout-btn" type="button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <p class="muted small" style="margin:0"><a href="home.html">&larr; My organizations</a></p>
+        <h1 id="org-name">Loading...</h1>
+        <div class="muted small" id="org-desc"></div>
+      </div>
+      <div id="my-role-badge"></div>
+    </div>
+
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-tab="membership">My Membership</button>
+      <button class="tab" data-tab="events">Events</button>
+      <button class="tab hidden officer-only" data-tab="members">Members &amp; Officers</button>
+      <button class="tab hidden manager-only" data-tab="settings">Org Settings</button>
+    </nav>
+
+    <!-- My membership -->
+    <section class="tab-panel" id="panel-membership">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Membership status</h2>
+          <div id="membership-box"></div>
+        </div>
+        <div class="card qr-card">
+          <h2>My QR code</h2>
+          <div id="qr-container"></div>
+          <button class="btn btn-outline btn-block" id="download-btn" style="margin-top:12px">Download QR card</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Events I attended</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Event</th><th>Date</th><th>Time in</th></tr></thead>
+          <tbody id="my-attendance"><tr><td colspan="3" class="empty">Loading...</td></tr></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- Events -->
+    <section class="tab-panel hidden" id="panel-events">
+      <div class="card officer-only hidden">
+        <h2>Create an event</h2>
+        <form id="event-form" novalidate>
+          <div class="row">
+            <div class="field"><label for="eventName">Event name</label><input id="eventName" placeholder="e.g. General Assembly" maxlength="80"></div>
+            <div class="field"><label for="eventDate">Date</label><input id="eventDate" type="date"></div>
+            <div class="field"><label for="eventVenue">Venue (optional)</label><input id="eventVenue" placeholder="e.g. AVR" maxlength="80"></div>
+          </div>
+          <button class="btn" type="submit" id="create-event-btn">Create event</button>
+        </form>
+      </div>
+      <div class="card">
+        <h2>Org events</h2>
+        <div class="event-list" id="event-list"><div class="empty">Loading...</div></div>
+      </div>
+    </section>
+
+    <!-- Members & officers -->
+    <section class="tab-panel hidden" id="panel-members">
+      <div class="card hidden" id="transfer-card">
+        <h2>Pass the presidency</h2>
+        <p class="muted small">Graduating or leaving the org? Choose the member who will become the new President. You will become a regular member.</p>
+        <div class="row">
+          <div class="field"><label for="transfer-select">New President</label><select id="transfer-select"></select></div>
+          <div class="field" style="flex:0 0 auto"><button class="btn" id="transfer-btn">Pass presidency</button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head">
+          <h2 style="margin:0"><span id="member-count">0</span> members</h2>
+          <div style="display:flex; gap:8px; flex-wrap:wrap">
+            <input id="member-search" placeholder="Search name or student no." style="max-width:260px">
+            <button class="btn btn-outline" id="members-csv-btn">Download CSV</button>
+          </div>
+        </div>
+        <p class="small muted" id="manage-note"></p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Name</th><th>Student No.</th><th>Course &amp; Year</th><th>Role</th><th>Membership</th><th>Actions</th></tr></thead>
+          <tbody id="member-body"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section class="tab-panel hidden" id="panel-settings">
+      <div class="card narrow" style="max-width:640px">
+        <h2>Org settings</h2>
+        <form id="settings-form" novalidate>
+          <div class="field"><label for="set-name">Organization name</label><input id="set-name" maxlength="60"></div>
+          <div class="field"><label for="set-desc">Description</label><textarea id="set-desc" rows="3" maxlength="300"></textarea></div>
+          <div class="notice" style="margin-bottom:14px">Membership lasts <strong>1 year</strong> from registration. Members re-register after it expires. Officers do not expire while holding a position.</div>
+          <button class="btn" type="submit" id="save-settings-btn">Save settings</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module" src="js/org.js"></script>
+</body>
+</html>

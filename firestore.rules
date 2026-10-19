@@ -1,0 +1,155 @@
+rules_version = '2';
+// ================================================================
+//  Multi-Org Event Attendance via QR - Firestore Security Rules
+//  Paste ALL of this into Firebase console -> Firestore -> Rules.
+// ================================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- Helper functions ----------
+    function signedIn() { return request.auth != null; }
+    function isSelf(uid) { return signedIn() && request.auth.uid == uid; }
+    function isAdmin() {
+      return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function orgPath(orgId) { return /databases/$(database)/documents/orgs/$(orgId); }
+    function memberPath(orgId, uid) { return /databases/$(database)/documents/orgs/$(orgId)/members/$(uid); }
+    function isMember(orgId) { return signedIn() && exists(memberPath(orgId, request.auth.uid)); }
+    function myRole(orgId) { return get(memberPath(orgId, request.auth.uid)).data.role; }
+    function isOfficer(orgId) {
+      return isMember(orgId) && myRole(orgId) in ['president', 'vice_president', 'secretary', 'treasurer'];
+    }
+    function isPresident(orgId) { return isMember(orgId) && myRole(orgId) == 'president'; }
+    function isVP(orgId) { return isMember(orgId) && myRole(orgId) == 'vice_president'; }
+    function limits() { return get(/databases/$(database)/documents/config/limits).data; }
+    function onlyChanged(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+    function validText(v, minLen, maxLen) { return v is string && v.size() >= minLen && v.size() <= maxLen; }
+
+    // ---------- Admins (created by hand in the Firebase console) ----------
+    match /admins/{uid} {
+      allow read: if isSelf(uid);
+      allow write: if false;
+    }
+
+    // ---------- Site settings: max number of organizations ----------
+    match /config/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    // ---------- User accounts (profile) ----------
+    match /users/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow create, update: if isSelf(uid)
+        && request.resource.data.keys().hasOnly(['fullName', 'studentNo', 'courseYear', 'email', 'createdAt', 'privacyAcceptedAt'])
+        && validText(request.resource.data.fullName, 2, 80)
+        && validText(request.resource.data.studentNo, 4, 20)
+        && validText(request.resource.data.courseYear, 1, 30);
+      allow delete: if isSelf(uid);   // "Delete my account"
+    }
+
+    // ---------- Requests to create an organization (one per user) ----------
+    match /orgRequests/{uid} {
+      allow read: if isSelf(uid) || isAdmin();
+      allow create: if isSelf(uid)
+        && request.resource.data.requesterUid == uid
+        && request.resource.data.status == 'pending'
+        && validText(request.resource.data.orgName, 3, 60)
+        && limits().orgCount < limits().maxOrgs;
+      allow update: if isAdmin();
+      allow delete: if isAdmin() || (isSelf(uid) && resource.data.status != 'approved');
+    }
+
+    // ---------- Organizations ----------
+    match /orgs/{orgId} {
+      allow read: if signedIn();
+
+      // Only the admin creates orgs (when approving a request), within the limit.
+      allow create: if isAdmin()
+        && request.resource.data.membershipMinutes == 525600   // 1 year
+        && limits().orgCount < limits().maxOrgs
+        && getAfter(/databases/$(database)/documents/config/limits).data.orgCount == limits().orgCount + 1;
+      allow delete: if isAdmin();
+
+      allow update: if isAdmin()
+        // President / VP edit org settings
+        || ((isPresident(orgId) || isVP(orgId))
+            && onlyChanged(['name', 'description'])
+            && validText(request.resource.data.name, 3, 60))
+        // President passes the presidency to another member (same batch)
+        || (isPresident(orgId)
+            && onlyChanged(['presidentUid'])
+            && getAfter(memberPath(orgId, request.resource.data.presidentUid)).data.role == 'president');
+
+      // ----- Members of this org -----
+      match /members/{uid} {
+        allow read: if isAdmin() || isSelf(uid) || isOfficer(orgId);
+
+        // A user registers themself as a member
+        allow create: if isAdmin() || (isSelf(uid)
+          && request.resource.data.keys().hasOnly(['uid', 'fullName', 'studentNo', 'courseYear', 'role', 'joinedAt', 'durationMinutes'])
+          && request.resource.data.uid == uid
+          && request.resource.data.role == 'member'
+          && request.resource.data.joinedAt == request.time
+          && request.resource.data.durationMinutes == get(orgPath(orgId)).data.membershipMinutes);
+
+        allow update: if isAdmin()
+          // Re-register: a member renews their own membership
+          || (isSelf(uid)
+              && onlyChanged(['joinedAt', 'durationMinutes'])
+              && request.resource.data.joinedAt == request.time
+              && request.resource.data.durationMinutes == get(orgPath(orgId)).data.membershipMinutes)
+          // A member edits their own details (synced from "My account")
+          || (isSelf(uid)
+              && onlyChanged(['fullName', 'studentNo', 'courseYear'])
+              && validText(request.resource.data.fullName, 2, 80)
+              && validText(request.resource.data.studentNo, 4, 20)
+              && validText(request.resource.data.courseYear, 1, 30))
+          // President promotes / demotes anyone except themself (not to president)
+          || (isPresident(orgId) && !isSelf(uid)
+              && onlyChanged(['role'])
+              && resource.data.role != 'president'
+              && request.resource.data.role in ['vice_president', 'secretary', 'treasurer', 'member'])
+          // Vice President promotes / demotes members, secretaries, treasurers
+          || (isVP(orgId) && !isSelf(uid)
+              && onlyChanged(['role'])
+              && resource.data.role in ['member', 'secretary', 'treasurer']
+              && request.resource.data.role in ['secretary', 'treasurer', 'member'])
+          // Presidency transfer: the new president
+          || (isPresident(orgId) && !isSelf(uid)
+              && onlyChanged(['role'])
+              && request.resource.data.role == 'president'
+              && getAfter(orgPath(orgId)).data.presidentUid == uid)
+          // Presidency transfer: the old president steps down
+          || (isPresident(orgId) && isSelf(uid)
+              && onlyChanged(['role'])
+              && request.resource.data.role != 'president'
+              && getAfter(orgPath(orgId)).data.presidentUid != uid);
+
+        allow delete: if isAdmin()
+          // A member leaves the org (the president must pass the title first)
+          || (isSelf(uid) && resource.data.role != 'president')
+          // President removes anyone except themself
+          || (isPresident(orgId) && resource.data.role != 'president')
+          // Vice President removes members, secretaries, treasurers
+          || (isVP(orgId) && resource.data.role in ['member', 'secretary', 'treasurer']);
+      }
+
+      // ----- Events of this org -----
+      match /events/{eventId} {
+        allow read: if isAdmin() || isMember(orgId);
+        allow create, update, delete: if isAdmin() || isOfficer(orgId);
+      }
+
+      // ----- Attendance records of this org -----
+      match /attendance/{recordId} {
+        allow read: if isAdmin() || isOfficer(orgId)
+          || (signedIn() && resource.data.uid == request.auth.uid);   // members see their own
+        allow create, delete: if isAdmin() || isOfficer(orgId);
+        allow update: if false;
+      }
+    }
+  }
+}

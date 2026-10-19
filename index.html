@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Org Attendance</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a class="guest-only" href="login.html">Log in</a>
+      <a class="guest-only nav-cta" href="signup.html">Create account</a>
+      <a class="user-only hidden nav-cta" href="home.html">My Orgs</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>One QR code for every org event</h1>
+      <p>Create one account, join your university organizations, and get attendance recorded by scanning your personal QR code.</p>
+    </section>
+
+    <section class="choices">
+      <a class="choice" href="signup.html">
+        <div class="choice-icon">&#9998;</div>
+        <h2>Create an account</h2>
+        <p>New here? Sign up once with your student details and get your personal QR code.</p>
+      </a>
+      <a class="choice" href="login.html?as=member">
+        <div class="choice-icon">&#9786;</div>
+        <h2>Member login</h2>
+        <p>Join orgs, renew your membership, and see the events you attended.</p>
+      </a>
+      <a class="choice" href="login.html?as=officer">
+        <div class="choice-icon">&#9881;</div>
+        <h2>Officer login</h2>
+        <p>Manage your org's events, scan attendance, and manage members and officers.</p>
+      </a>
+    </section>
+
+    <section class="card" style="margin-top:28px">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li>Create an account. You get one personal QR code for all orgs.</li>
+        <li>Register as a member of any organization on the site.</li>
+        <li>Show your QR code at the event entrance; an officer scans it.</li>
+        <li>See your attended events anytime. Re-register when your membership expires.</li>
+      </ol>
+      <p class="small muted" style="margin-top:14px">Want to bring your organization here? Log in and send a request to create an org. The site admin approves requests. <a href="login.html?as=admin">Admin login</a></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module">import { checkConfig } from "./js/common.js"; checkConfig();</script>
+</body>
+</html>

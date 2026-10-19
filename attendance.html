@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance List</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <span class="user-name" id="user-name"></span>
+      <a href="home.html">My Orgs</a>
+      <a href="account.html">Account</a>
+      <a href="admin.html" id="admin-link" class="hidden">Admin</a>
+      <button id="logout-btn" type="button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <p class="muted small" style="margin:0"><a id="back-link" href="home.html">&larr; Back to org</a> &middot; <span id="org-name"></span></p>
+          <h1 id="event-title" style="margin:0">Loading...</h1>
+          <div class="event-meta" id="event-meta"></div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap">
+          <a class="btn btn-outline" id="scan-link" href="#">Open scanner</a>
+          <button class="btn" id="csv-btn">Download CSV (Excel)</button>
+        </div>
+      </div>
+    </section>
+    <section class="card">
+      <div class="card-head">
+        <h2><span id="att-count">0</span> attendees</h2>
+        <input id="search" placeholder="Search name, student no. or course" style="max-width:320px">
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>#</th><th>Name</th><th>Student No.</th><th>Course &amp; Year</th><th>Time In</th><th></th></tr></thead>
+        <tbody id="att-body"><tr><td colspan="6" class="empty">Loading...</td></tr></tbody>
+      </table></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module" src="js/attendance.js"></script>
+</body>
+</html>

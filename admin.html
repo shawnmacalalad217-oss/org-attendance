@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <span class="user-name" id="user-name"></span>
+      <a href="home.html">My Orgs</a>
+      <a href="account.html">Account</a>
+      <a href="admin.html" id="admin-link" class="hidden">Admin</a>
+      <button id="logout-btn" type="button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <p class="muted small" style="margin:0">Site administrator</p>
+        <h1>Admin dashboard</h1>
+      </div>
+    </div>
+
+    <section class="card">
+      <h2>Organization limit</h2>
+      <p class="muted small">Only a limited number of organizations can be created on this website.</p>
+      <div id="limit-info"></div>
+      <form id="limit-form" class="row" novalidate style="margin-top:10px">
+        <div class="field" style="max-width:200px"><label for="max-orgs">Maximum organizations</label>
+          <input id="max-orgs" type="number" min="1" max="20"></div>
+        <div class="field" style="flex:0 0 auto"><button class="btn btn-outline" type="submit">Save limit</button></div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Pending requests</h2>
+      <div class="event-list" id="pending-list"><div class="empty">Loading...</div></div>
+    </section>
+
+    <section class="card">
+      <h2>Organizations</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Name</th><th>President</th><th>Created</th><th></th></tr></thead>
+        <tbody id="org-body"><tr><td colspan="4" class="empty">Loading...</td></tr></tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <h2>Request history</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Org name</th><th>Requested by</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody id="history-body"><tr><td colspan="4" class="empty">Loading...</td></tr></tbody>
+      </table></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

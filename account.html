@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <span class="user-name" id="user-name"></span>
+      <a href="home.html">My Orgs</a>
+      <a href="account.html">Account</a>
+      <a href="admin.html" id="admin-link" class="hidden">Admin</a>
+      <button id="logout-btn" type="button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="container" style="max-width:760px">
+    <div class="page-head">
+      <div>
+        <p class="muted small" style="margin:0"><a href="home.html">&larr; My organizations</a></p>
+        <h1>My account</h1>
+      </div>
+    </div>
+
+    <section class="card">
+      <h2>My details</h2>
+      <p class="muted small">Changes are also updated in every organization you belong to. Past attendance records keep the details you had on the day you attended.</p>
+      <form id="details-form" novalidate>
+        <div class="field"><label for="fullName">Full name</label><input id="fullName" maxlength="80" autocomplete="name"></div>
+        <div class="row">
+          <div class="field"><label for="studentNo">Student number</label><input id="studentNo" maxlength="20"></div>
+          <div class="field"><label for="courseYear">Course &amp; year</label><input id="courseYear" maxlength="30"></div>
+        </div>
+        <div class="field"><label for="email">Email</label><input id="email" type="email" disabled>
+          <div class="hint">Your login email cannot be changed here.</div></div>
+        <button class="btn" type="submit" id="save-btn">Save changes</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Password</h2>
+      <p class="muted small">We will email you a secure link from Firebase to set a new password.</p>
+      <button class="btn btn-outline" id="reset-btn">Email me a password reset link</button>
+    </section>
+
+    <section class="card">
+      <h2>My data</h2>
+      <p class="muted small">Download a copy of the information this website stores about you: your profile, memberships and your own attendance records. See the <a href="privacy.html">Privacy Policy</a>.</p>
+      <button class="btn btn-outline" id="export-btn">Download my data (JSON)</button>
+    </section>
+
+    <section class="card danger-zone">
+      <h2>Delete my account</h2>
+      <p class="muted small">This permanently deletes your login, your profile and your memberships in all organizations. Attendance records already kept by an organization stay in that organization's records. If you are a President, pass the presidency first.</p>
+      <form id="delete-form" novalidate>
+        <div class="field" style="max-width:320px"><label for="delete-password">Enter your password to confirm</label>
+          <input id="delete-password" type="password" autocomplete="current-password"></div>
+        <button class="btn btn-danger" type="submit" id="delete-btn">Delete my account</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module" src="js/account.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="privacy.html">Privacy</a>
+      <a class="guest-only" href="login.html">Log in</a>
+      <a class="guest-only nav-cta" href="signup.html">Create account</a>
+      <a class="user-only hidden nav-cta" href="home.html">My Orgs</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <article class="card prose">
+      <h1>About <span data-site-name></span></h1>
+      <p>A website for <span data-university-name></span> student organizations to record event attendance with QR codes. Each student has one account and one personal QR code that works for every organization they join, so there are no paper attendance sheets and no separate sign-ups per event.</p>
+
+      <h2>Features</h2>
+      <div class="feature-grid">
+        <div class="feature"><h3>One account, one QR</h3><p>Sign up once. Your personal QR code works in every org you join.</p></div>
+        <div class="feature"><h3>Many organizations</h3><p>Students can request a new org. The admin approves requests and limits how many orgs exist.</p></div>
+        <div class="feature"><h3>QR attendance</h3><p>Officers scan QR codes with a phone or laptop camera, or type a student number.</p></div>
+        <div class="feature"><h3>Yearly membership</h3><p>Memberships last 1 year. Members re-register when they expire.</p></div>
+        <div class="feature"><h3>Officer roles</h3><p>President, Vice President, Secretary and Treasurer, with presidency transfer.</p></div>
+        <div class="feature"><h3>Attendance history</h3><p>Members see the events they attended; officers export lists as CSV.</p></div>
+      </div>
+
+      <h2>Roles</h2>
+      <div style="overflow-x:auto"><table>
+        <thead><tr><th>Role</th><th>What they can do</th></tr></thead>
+        <tbody>
+          <tr><td>Member</td><td>Join orgs, show QR code, see own attendance, re-register.</td></tr>
+          <tr><td>Secretary / Treasurer</td><td>Everything a member can, plus create events, scan attendance and view member lists.</td></tr>
+          <tr><td>Vice President</td><td>Officer tools, plus assign Secretary/Treasurer, remove members and edit org details.</td></tr>
+          <tr><td>President</td><td>Everything, including appointing a Vice President and transferring the presidency.</td></tr>
+          <tr><td>Admin</td><td>Approves or rejects org requests, sets the org limit and can delete orgs.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li>Create an account with your name, student number and course &amp; year.</li>
+        <li>Register as a member of any organization.</li>
+        <li>At an event, show your QR code. An officer scans it and your time-in is saved.</li>
+        <li>Check your attended events anytime on the organization's page.</li>
+      </ol>
+
+      <h2>The project</h2>
+      <p><span id="course-info"></span>. Built with HTML, CSS and JavaScript, with Google Firebase (Authentication and Cloud Firestore) for accounts and data, hosted on GitHub Pages.</p>
+      <div id="team"></div>
+      <p>Read how we handle your information in our <a href="privacy.html">Privacy Policy</a>. Questions? Contact <a data-contact-email></a>.</p>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+  <script type="module">import { checkConfig, escapeHtml } from "./js/common.js";
+import { TEAM_MEMBERS, COURSE_INFO } from "./js/site-config.js";
+checkConfig();
+document.getElementById("course-info").textContent = COURSE_INFO;
+if (TEAM_MEMBERS.length) {
+  document.getElementById("team").innerHTML = "<h2>Team</h2><ul>" +
+    TEAM_MEMBERS.map((n) => `<li>${escapeHtml(n)}</li>`).join("") + "</ul>";
+}</script>
+</body>
+</html>

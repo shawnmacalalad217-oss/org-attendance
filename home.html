@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Organizations</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/boot-check.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="home.html">
+      <span class="brand-logo">QR</span>
+      <span><span data-site-name></span><small data-university-name></small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav" aria-label="Main menu">
+      <span class="user-name" id="user-name"></span>
+      <a href="home.html">My Orgs</a>
+      <a href="account.html">Account</a>
+      <a href="admin.html" id="admin-link" class="hidden">Admin</a>
+      <button id="logout-btn" type="button">Log out</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="page-head">
+      <div>
+        <p class="muted small" style="margin:0">Welcome back</p>
+        <h1 id="welcome-name">...</h1>
+        <div class="muted small" id="welcome-meta"></div>
+      </div>
+      <button class="btn btn-outline" id="show-qr-btn">Show my QR code</button>
+    </div>
+
+    <section class="card">
+      <h2>My organizations</h2>
+      <div class="org-grid" id="my-orgs"><div class="empty">Loading...</div></div>
+    </section>
+
+    <section class="card">
+      <h2>Join an organization</h2>
+      <p class="muted small">Register as a member. Membership lasts 1 year; re-register when it expires.</p>
+      <div class="org-grid" id="other-orgs"><div class="empty">Loading...</div></div>
+    </section>
+
+    <section class="card" id="request-card">
+      <h2>Start a new organization</h2>
+      <div id="slot-info" class="small muted"></div>
+      <div id="request-area"><div class="empty">Loading...</div></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="footer-links" aria-label="Footer">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>&copy; <span id="footer-year"></span> <span data-site-name></span> &middot; <span data-university-name></span></div>
+  </footer>
+
+  <div class="modal-backdrop hidden" id="qr-modal">
+    <div class="modal qr-card">
+      <h2>My QR code</h2>
+      <p class="small muted">Use this one QR code for all your org events.</p>
+      <div id="qr-container"></div>
+      <div style="display:grid; gap:8px; margin-top:16px">
+        <button class="btn" id="download-btn">Download QR card</button>
+        <button class="btn btn-outline" id="close-modal">Close</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="js/home.js"></script>
+</body>
+</html>
