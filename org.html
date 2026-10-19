@@ -70,9 +70,14 @@
         <form id="event-form" novalidate>
           <div class="row">
             <div class="field"><label for="eventName">Event name</label><input id="eventName" placeholder="e.g. General Assembly" maxlength="80"></div>
-            <div class="field"><label for="eventDate">Date</label><input id="eventDate" type="date"></div>
             <div class="field"><label for="eventVenue">Venue (optional)</label><input id="eventVenue" placeholder="e.g. AVR" maxlength="80"></div>
           </div>
+          <div class="row">
+            <div class="field"><label for="eventDate">Date</label><input id="eventDate" type="date"></div>
+            <div class="field"><label for="eventStart">Start time</label><input id="eventStart" type="time" value="08:00"></div>
+            <div class="field"><label for="eventEnd">End time</label><input id="eventEnd" type="time" value="17:00"></div>
+          </div>
+          <p class="hint" style="margin:-4px 0 14px">Scanning opens 30 minutes before the start time and closes automatically at the end time.</p>
           <button class="btn" type="submit" id="create-event-btn">Create event</button>
         </form>
       </div>

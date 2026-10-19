@@ -4,7 +4,7 @@ import {
   doc, getDoc, getDocs, collection, query, where, onSnapshot, runTransaction, serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
-  db, $, requireLogin, toast, escapeHtml, formatDate, formatTime, getParam,
+  db, $, requireLogin, toast, escapeHtml, formatDate, formatTime, formatDateTime, getParam, eventWhen, eventStatus,
   cleanStudentNo, isValidStudentNo, isOfficerRole, membershipStatus, parseQr,
 } from "./common.js";
 
@@ -34,20 +34,50 @@ requireLogin(async (user) => {
   $("#org-name").textContent = org.name;
   $("#back-link").href = `org.html?org=${orgId}&tab=events`;
   $("#event-title").textContent = eventData.name;
-  $("#event-meta").textContent = formatDate(eventData.date) + (eventData.venue ? " · " + eventData.venue : "");
+  $("#event-meta").textContent = eventWhen(eventData) + (eventData.venue ? " · " + eventData.venue : "");
   $("#view-attendance-link").href = `attendance.html?org=${orgId}&event=${eventId}`;
   document.title = `Scan - ${eventData.name}`;
+  applyWindow();
+  setInterval(applyWindow, 15000);   // close automatically when the end time passes
 
   onSnapshot(query(collection(db, "orgs", orgId, "attendance"), where("eventId", "==", eventId)), (s) => {
     $("#live-count").textContent = s.size;
   });
 });
 
+// ---------- Scan window (start time - 30 min  ...  end time) ----------
+function applyWindow() {
+  if (!eventData) return;
+  const s = eventStatus(eventData);
+  const note = $("#window-notice");
+  const closed = !s.canScan;
+  $("#start-btn").disabled = closed;
+  $("#manual-btn").disabled = closed;
+  $("#manualNo").disabled = closed;
+  if (s.state === "ended") {
+    note.className = "notice notice-warn";
+    note.innerHTML = `<strong>This event has ended.</strong> Scanning closed at ${escapeHtml(formatTime(s.endsAt))}. You can still view and download the attendance list.`;
+    if (scanner) stopCamera();
+    showResult("idle", "Scanning closed", "This event has ended.");
+  } else if (s.state === "upcoming") {
+    note.className = "notice";
+    note.innerHTML = `Scanning opens at <strong>${escapeHtml(formatDateTime(s.opensAt))}</strong> (30 minutes before the event starts). This page will unlock automatically.`;
+    showResult("idle", "Not open yet", `Scanning opens at ${formatDateTime(s.opensAt)}.`);
+  } else if (s.endsAt) {
+    note.className = "notice";
+    note.innerHTML = `Scanning is open until <strong>${escapeHtml(formatTime(s.endsAt))}</strong>.`;
+    if ($("#scan-result").textContent.includes("Not open yet")) showResult("idle", "Ready to scan", "Point the camera at a member's QR code.");
+  } else {
+    note.className = "notice hidden";
+  }
+}
+
 // ---------- Camera ----------
 $("#start-btn").addEventListener("click", startCamera);
 $("#stop-btn").addEventListener("click", stopCamera);
 
 async function startCamera() {
+  if (eventData && !eventStatus(eventData).canScan) { applyWindow(); return; }
   try {
     $("#reader").innerHTML = "";
     // eslint-disable-next-line no-undef
@@ -120,6 +150,7 @@ $("#manual-form").addEventListener("submit", async (e) => {
 
 // ---------- Recording ----------
 async function record(uid) {
+  if (!eventStatus(eventData).canScan) { applyWindow(); return; }
   busy = true;
   showResult("idle", "Checking...", "");
   try {
@@ -164,7 +195,12 @@ async function record(uid) {
     }
   } catch (err) {
     console.error(err);
-    showResult("error", "Could not save", "Check your internet connection and try again.");
+    if (err.code === "permission-denied") {
+      showResult("error", "Scanning closed", "The database only accepts scans during the event time.");
+      applyWindow();
+    } else {
+      showResult("error", "Could not save", "Check your internet connection and try again.");
+    }
   } finally {
     busy = false;
   }

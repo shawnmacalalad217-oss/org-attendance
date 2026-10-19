@@ -34,6 +34,7 @@
         </div>
         <a class="btn btn-outline" id="view-attendance-link" href="#">View attendance list</a>
       </div>
+      <div class="notice hidden" id="window-notice" style="margin-top:14px"></div>
     </section>
 
     <div class="grid-2">
@@ -52,7 +53,7 @@
           <label for="manualNo">No QR? Enter student number manually</label>
           <div style="display:flex; gap:8px">
             <input id="manualNo" placeholder="e.g. 2023-00123" maxlength="20">
-            <button class="btn btn-outline" type="submit">Record</button>
+            <button class="btn btn-outline" type="submit" id="manual-btn">Record</button>
           </div>
         </form>
       </section>

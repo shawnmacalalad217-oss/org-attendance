@@ -7,11 +7,11 @@ export const SITE_NAME = "Campus Org Attendance";
 export const UNIVERSITY_NAME = "Pamantasan ng Cabuyao";
 
 // Shown on the About page. Example: ["Juan Dela Cruz", "Maria Santos"]
-export const TEAM_MEMBERS = ["Shawn Michael L. Macalalad"];
+export const TEAM_MEMBERS = [];
 export const COURSE_INFO = "Final project requirement";
 
 // Shown on the Privacy Policy as the contact for privacy questions.
-export const CONTACT_EMAIL = "macalaladshawnmichael20@gmail.com";
+export const CONTACT_EMAIL = "PASTE_YOUR_TEAM_EMAIL";
 
 // Must match the Firestore location you chose when creating the database.
 export const DATA_REGION = "Singapore (asia-southeast1)";

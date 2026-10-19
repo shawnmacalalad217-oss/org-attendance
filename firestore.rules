@@ -26,6 +26,13 @@ service cloud.firestore {
       return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
     }
     function validText(v, minLen, maxLen) { return v is string && v.size() >= minLen && v.size() <= maxLen; }
+    // Attendance can be recorded from 30 min before an event starts until it ends.
+    // (Events created before times were added have no endAt and stay open.)
+    function scanWindowOpen(orgId, eventId) {
+      let ev = get(/databases/$(database)/documents/orgs/$(orgId)/events/$(eventId)).data;
+      return !('endAt' in ev)
+        || (request.time >= ev.startAt - duration.value(30, 'm') && request.time <= ev.endAt);
+    }
 
     // ---------- Admins (created by hand in the Firebase console) ----------
     match /admins/{uid} {
@@ -140,14 +147,23 @@ service cloud.firestore {
       // ----- Events of this org -----
       match /events/{eventId} {
         allow read: if isAdmin() || isMember(orgId);
-        allow create, update, delete: if isAdmin() || isOfficer(orgId);
+        // Every event needs a start and end time, and must end after it starts.
+        allow create, update: if (isAdmin() || isOfficer(orgId))
+          && request.resource.data.startAt is timestamp
+          && request.resource.data.endAt is timestamp
+          && request.resource.data.endAt > request.resource.data.startAt;
+        allow delete: if isAdmin() || isOfficer(orgId);
       }
 
       // ----- Attendance records of this org -----
       match /attendance/{recordId} {
         allow read: if isAdmin() || isOfficer(orgId)
           || (signedIn() && resource.data.uid == request.auth.uid);   // members see their own
-        allow create, delete: if isAdmin() || isOfficer(orgId);
+        // Officers can only record attendance from 30 minutes before the event
+        // starts until the event ends (server time, so a phone clock can't cheat).
+        allow create: if isAdmin()
+          || (isOfficer(orgId) && scanWindowOpen(orgId, request.resource.data.eventId));
+        allow delete: if isAdmin() || isOfficer(orgId);
         allow update: if false;
       }
     }

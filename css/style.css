@@ -284,3 +284,9 @@ td select { width: auto; padding: 6px 8px; font-size: .85rem; }
   .tab { white-space: nowrap; }
   .card-head input { max-width: 100% !important; }
 }
+
+/* Event time status */
+.status-upcoming { background: #eef4ff; color: #1d4ed8; }
+.status-ended { background: #f1f3f2; color: var(--muted); }
+.event-item h3 .status { font-size: .72rem; vertical-align: middle; margin-left: 6px; }
+button:disabled, input:disabled { opacity: .55; cursor: not-allowed; }

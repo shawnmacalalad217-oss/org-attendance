@@ -67,3 +67,10 @@ UPDATING FROM THE PREVIOUS VERSION
   3. Firestore -> Rules -> paste the NEW firestore.rules -> Publish.
      (Needed for editing details, deleting accounts and the privacy consent.)
   4. Upload all files to GitHub again.
+
+EVENT TIMES (added)
+  Each event has a date, start time and end time. Officers can scan from
+  30 minutes before the start until the end time; after that the scanner
+  locks and the Firestore rules refuse new attendance records.
+  (Change the 30 minutes in js/common.js SCAN_EARLY_MINUTES AND in
+  firestore.rules scanWindowOpen - keep both the same.)

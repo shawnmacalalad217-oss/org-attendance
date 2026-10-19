@@ -66,6 +66,42 @@ export function membershipStatus(m) {
   return { expired: Date.now() >= expiresAt.getTime(), expiresAt, officer: false };
 }
 
+// ---------- Event times ----------
+// Officers may start scanning this many minutes before the event starts.
+// After the end time, scanning is closed (also enforced by firestore.rules).
+export const SCAN_EARLY_MINUTES = 30;
+
+export function formatClock(hhmm) {
+  if (!hhmm) return "";
+  const [h, m] = hhmm.split(":").map(Number);
+  return new Date(2000, 0, 1, h, m).toLocaleTimeString("en-PH", { hour: "numeric", minute: "2-digit" });
+}
+// "Mon, October 20, 2026 · 8:00 AM – 9:00 PM"
+export function eventWhen(ev) {
+  if (!ev) return "";
+  const d = formatDate(ev.date);
+  return ev.startTime && ev.endTime ? `${d} · ${formatClock(ev.startTime)} – ${formatClock(ev.endTime)}` : d;
+}
+// { state: "upcoming" | "open-early" | "ongoing" | "ended" | "untimed", canScan, opensAt, endsAt }
+export function eventStatus(ev, now = Date.now()) {
+  const start = toMillis(ev && ev.startAt), end = toMillis(ev && ev.endAt);
+  if (start == null || end == null) return { state: "untimed", canScan: true, opensAt: null, endsAt: null };
+  const opens = start - SCAN_EARLY_MINUTES * 60000;
+  if (now > end) return { state: "ended", canScan: false, opensAt: new Date(opens), endsAt: new Date(end) };
+  if (now < opens) return { state: "upcoming", canScan: false, opensAt: new Date(opens), endsAt: new Date(end) };
+  return { state: now < start ? "open-early" : "ongoing", canScan: true, opensAt: new Date(opens), endsAt: new Date(end) };
+}
+export function eventStatusPill(ev) {
+  const s = eventStatus(ev);
+  return {
+    upcoming: '<span class="status status-upcoming">Upcoming</span>',
+    "open-early": '<span class="status status-active">Starting soon &middot; scanning open</span>',
+    ongoing: '<span class="status status-active">Ongoing</span>',
+    ended: '<span class="status status-ended">Ended</span>',
+    untimed: "",
+  }[s.state];
+}
+
 // ---------- DOM helpers ----------
 export const $ = (sel) => document.querySelector(sel);
 export const $$ = (sel) => Array.from(document.querySelectorAll(sel));

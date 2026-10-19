@@ -3,7 +3,7 @@ import {
   doc, getDoc, deleteDoc, collection, query, where, onSnapshot,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
-  db, $, requireLogin, toast, escapeHtml, formatDate, formatTime, getParam, downloadCSV, isOfficerRole,
+  db, $, requireLogin, toast, escapeHtml, formatDate, formatTime, getParam, downloadCSV, isOfficerRole, eventWhen, eventStatus,
 } from "./common.js";
 
 const orgId = getParam("org");
@@ -27,7 +27,12 @@ requireLogin(async (user) => {
   $("#org-name").textContent = org.name;
   $("#back-link").href = `org.html?org=${orgId}&tab=events`;
   $("#event-title").textContent = eventData.name;
-  $("#event-meta").textContent = formatDate(eventData.date) + (eventData.venue ? " · " + eventData.venue : "");
+  $("#event-meta").textContent = eventWhen(eventData) + (eventData.venue ? " · " + eventData.venue : "");
+  if (eventStatus(eventData).state === "ended") {
+    const link = $("#scan-link");
+    link.removeAttribute("href"); link.textContent = "Scanning closed";
+    link.style.opacity = ".55"; link.style.pointerEvents = "none";
+  }
   $("#scan-link").href = `scanner.html?org=${orgId}&event=${eventId}`;
   document.title = `Attendance - ${eventData.name}`;
 
@@ -65,7 +70,7 @@ function render() {
 $("#csv-btn").addEventListener("click", () => {
   if (!rows.length) return toast("No attendees to download yet.", "error");
   downloadCSV([
-    [org?.name || "", eventData?.name || "", formatDate(eventData?.date), eventData?.venue || ""],
+    [org?.name || "", eventData?.name || "", eventWhen(eventData), eventData?.venue || ""],
     [],
     ["#", "Name", "Student No.", "Course & Year", "Time In"],
     ...rows.map((r, i) => [i + 1, r.fullName, r.studentNo, r.courseYear, formatTime(r.timeIn)]),

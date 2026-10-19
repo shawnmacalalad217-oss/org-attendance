@@ -6,7 +6,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import {
   db, $, $$, requireLogin, toast, escapeHtml, getParam, roleBadge, membershipStatus,
-  formatDate, formatDateTime, formatTime, isOfficerRole, canManageMembers, assignableRoles,
+  formatDate, formatDateTime, eventWhen, eventStatus, eventStatusPill, formatTime, isOfficerRole, canManageMembers, assignableRoles,
   canRemove, ROLE_LABELS, renderQrCard, downloadCSV,
 } from "./common.js";
 
@@ -134,7 +134,7 @@ async function loadEvents() {
   try {
     const snap = await getDocs(collection(db, "orgs", orgId, "events"));
     const events = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+      .sort((a, b) => ((b.date || "") + (b.startTime || "")).localeCompare((a.date || "") + (a.startTime || "")));
     const attendedIds = new Set(myAttendance.map((r) => r.eventId));
     const officer = isOfficerRole(myRole);
 
@@ -142,21 +142,26 @@ async function loadEvents() {
       list.innerHTML = `<div class="empty">No events yet.${officer ? " Create the first one above." : ""}</div>`;
       return;
     }
-    list.innerHTML = events.map((ev) => `
+    list.innerHTML = events.map((ev) => {
+      const st = eventStatus(ev);
+      return `
       <div class="event-item">
         <div>
-          <h3>${escapeHtml(ev.name)}</h3>
-          <div class="event-meta">${escapeHtml(formatDate(ev.date))}${ev.venue ? " &middot; " + escapeHtml(ev.venue) : ""}</div>
+          <h3>${escapeHtml(ev.name)} ${eventStatusPill(ev)}</h3>
+          <div class="event-meta">${escapeHtml(eventWhen(ev))}${ev.venue ? " &middot; " + escapeHtml(ev.venue) : ""}</div>
           ${attendedIds.has(ev.id) ? '<div class="attended small">&#10003; You attended</div>' : '<div class="not-attended small">Not attended</div>'}
           ${officer ? `<span class="count-pill" id="count-${ev.id}">... attendees</span>` : ""}
         </div>
         ${officer ? `
         <div class="event-actions">
-          <a class="btn btn-sm" href="scanner.html?org=${orgId}&event=${ev.id}">Scan QR</a>
+          ${st.state === "ended"
+            ? '<span class="btn btn-sm btn-outline" aria-disabled="true" style="opacity:.55;cursor:default">Scanning closed</span>'
+            : `<a class="btn btn-sm" href="scanner.html?org=${orgId}&event=${ev.id}">Scan QR</a>`}
           <a class="btn btn-sm btn-outline" href="attendance.html?org=${orgId}&event=${ev.id}">Attendance</a>
           <button class="btn btn-sm btn-danger" data-del-event="${ev.id}" data-name="${escapeHtml(ev.name)}">Delete</button>
         </div>` : ""}
-      </div>`).join("");
+      </div>`;
+    }).join("");
 
     if (officer) {
       events.forEach(async (ev) => {
@@ -178,14 +183,21 @@ $("#event-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const name = $("#eventName").value.trim();
   const date = $("#eventDate").value;
+  const startTime = $("#eventStart").value;
+  const endTime = $("#eventEnd").value;
   const venue = $("#eventVenue").value.trim();
   if (!name) return toast("Enter the event name.", "error");
   if (!date) return toast("Choose the event date.", "error");
+  if (!startTime || !endTime) return toast("Set the start and end time.", "error");
+  const startAt = new Date(`${date}T${startTime}`);
+  const endAt = new Date(`${date}T${endTime}`);
+  if (endAt <= startAt) return toast("End time must be later than the start time.", "error");
+  if (endAt <= new Date()) return toast("That end time has already passed.", "error");
   const btn = $("#create-event-btn");
   btn.disabled = true;
   try {
     await addDoc(collection(db, "orgs", orgId, "events"), {
-      name, date, venue, createdBy: me.uid, createdAt: serverTimestamp(),
+      name, date, startTime, endTime, startAt, endAt, venue, createdBy: me.uid, createdAt: serverTimestamp(),
     });
     $("#eventName").value = ""; $("#eventVenue").value = "";
     toast("Event created.", "success");
