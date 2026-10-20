@@ -1,6 +1,7 @@
 // My account: edit details, reset password, download my data, delete account.
 import {
   sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, deleteUser,
+  GoogleAuthProvider, reauthenticateWithPopup,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   collection, getDocs, doc, getDoc, query, where, writeBatch,
@@ -12,10 +13,19 @@ import {
 let me = null;
 let profile = null;
 
+const hasPassword = (user) => (user.providerData || []).some((p) => p.providerId === "password");
+
 requireLogin(async (user, prof, isAdmin) => {
   me = user;
   profile = prof;
   $("#email").value = user.email || "";
+  if (!hasPassword(user)) {
+    // Signed up with Google: no password to type when deleting.
+    $("#delete-password").closest(".field").classList.add("hidden");
+    $("#delete-btn").textContent = "Confirm with Google and delete";
+    $("#reset-btn").textContent = "Email me a link to create a password";
+    $("#password-note").textContent = "You sign in with Google. You can also create a password so you can log in with your email.";
+  }
   if (!profile) {
     $("#details-form").innerHTML = `<div class="empty">${isAdmin
       ? "This is the admin account. It has no student profile to edit."
@@ -144,16 +154,19 @@ $("#export-btn").addEventListener("click", async () => {
 $("#delete-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const password = $("#delete-password").value;
-  if (!password) return toast("Enter your password to confirm.", "error");
+  const usePassword = hasPassword(me);
+  if (usePassword && !password) return toast("Enter your password to confirm.", "error");
   const btn = $("#delete-btn");
   btn.disabled = true;
   try {
     // 1. Confirm it is really the owner (Firebase also requires a recent login).
     try {
-      await reauthenticateWithCredential(me, EmailAuthProvider.credential(me.email, password));
+      if (usePassword) await reauthenticateWithCredential(me, EmailAuthProvider.credential(me.email, password));
+      else await reauthenticateWithPopup(me, new GoogleAuthProvider());
     } catch (err) {
       console.error(err);
-      toast("Wrong password.", "error");
+      if (err.code === "auth/popup-closed-by-user" || err.code === "auth/cancelled-popup-request") return;
+      toast(usePassword ? "Wrong password." : "Could not confirm with Google. Use the same Google account and try again.", "error");
       return;
     }
 

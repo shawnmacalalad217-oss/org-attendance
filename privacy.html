@@ -4,13 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy Policy</title>
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#1d6b45">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/boot-check.js"></script>
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="index.html">
-      <span class="brand-logo">QR</span>
+      <img class="brand-logo" src="img/logo.svg" alt="" width="38" height="38">
       <span><span data-site-name></span><small data-university-name></small></span>
     </a>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
@@ -25,6 +32,7 @@
   </header>
 
   <main class="container">
+    <a class="back-btn" href="index.html" data-back>&larr; Back</a>
     <article class="card prose">
       <h1>Privacy Policy</h1>
       <p class="muted small">Last updated: <span data-policy-updated></span></p>
@@ -44,6 +52,7 @@
         <thead><tr><th>Information</th><th>When it is collected</th></tr></thead>
         <tbody>
           <tr><td><strong>Email address and password</strong></td><td>When you create an account. Your password is handled by Firebase Authentication and stored by Google in hashed form. We (the developers, officers and admin) can never see it.</td></tr>
+          <tr><td><strong>Google sign-in (optional)</strong></td><td>If you choose “Continue with Google”, Google tells us your name and email address and confirms your identity. We use the name only to pre-fill the sign-up form and save the email as your login email. We do not get your Google password, contacts, Drive files or any other Google data, and we do not save your Google profile photo.</td></tr>
           <tr><td><strong>Full name, student number, course &amp; year</strong></td><td>When you create an account or edit your details on the My account page.</td></tr>
           <tr><td><strong>Account dates</strong></td><td>The date your account was created and the date you agreed to this policy.</td></tr>
           <tr><td><strong>Memberships</strong></td><td>When you register in an organization: the organization, your role (Member, Secretary, Treasurer, Vice President or President), the date you registered or re-registered, and the membership length (1 year). A copy of your name, student number and course &amp; year is saved with the membership so officers can identify you.</td></tr>
@@ -85,6 +94,7 @@
 
       <h2 id="third">5. Services we use</h2>
       <ul>
+        <li><strong>Google Sign-In</strong>, only if you choose “Continue with Google”. Signing in happens in a Google window under <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
         <li><strong>Google Firebase</strong> (Authentication and Cloud Firestore) stores the data described above. Database location: <span data-data-region></span>. Google may process technical data such as IP addresses to provide and secure the service. See <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase privacy and security</a>.</li>
         <li><strong>GitHub Pages</strong> hosts the website files. Like any web host, GitHub may log visitors' IP addresses for security. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement</a>.</li>
         <li>Code libraries for the QR code and scanner are loaded from public content networks (gstatic.com, cdnjs.cloudflare.com, unpkg.com). These servers receive your IP address when your browser downloads the files, but they receive none of your account data.</li>
@@ -105,7 +115,7 @@
         <li><strong>Correct</strong> your name, student number and course &amp; year on the <a href="account.html">My account</a> page. The change also updates your memberships.</li>
         <li><strong>Download</strong> a copy of your data (JSON file) on the My account page.</li>
         <li><strong>Delete</strong> your account on the My account page. This deletes your login, profile, memberships and any pending organization request. A President must transfer the presidency first.</li>
-        <li><strong>Reset</strong> your password by email.</li>
+        <li><strong>Reset</strong> your password by email (“Forgot password?” on the login page, or on My account).</li>
       </ul>
       <p>For anything you cannot do yourself, such as removing past attendance records, contact us (see below).</p>
 
@@ -117,11 +127,12 @@
       <p>If the way the website handles data changes, we will update this page and the “Last updated” date above.</p>
 
       <h2 id="contact">10. Contact</h2>
-      <p>For questions or requests about your data, contact <a>macalaladshawnmichael20@gmail.com.</a></p>
+      <p>For questions or requests about your data, contact <a>macalaladshawnmichael20@gmail.com</a>.</p>
     </article>
   </main>
 
   <footer class="footer">
+    <div class="footer-brand"><img src="img/logo.svg" alt="" width="28" height="28"><span data-site-name></span></div>
     <nav class="footer-links" aria-label="Footer">
       <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
     </nav>

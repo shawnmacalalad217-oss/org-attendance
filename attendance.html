@@ -4,13 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attendance List</title>
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="icon" href="img/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="theme-color" content="#1d6b45">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <script src="js/boot-check.js"></script>
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="home.html">
-      <span class="brand-logo">QR</span>
+      <img class="brand-logo" src="img/logo.svg" alt="" width="38" height="38">
       <span><span data-site-name></span><small data-university-name></small></span>
     </a>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false">&#9776;</button>
@@ -27,7 +34,8 @@
     <section class="card">
       <div class="card-head">
         <div>
-          <p class="muted small" style="margin:0"><a id="back-link" href="home.html">&larr; Back to org</a> &middot; <span id="org-name"></span></p>
+          <a class="back-btn" id="back-link" href="home.html">&larr; Back to org</a>
+          <p class="muted small" style="margin:0"><span id="org-name"></span></p>
           <h1 id="event-title" style="margin:0">Loading...</h1>
           <div class="event-meta" id="event-meta"></div>
         </div>
@@ -50,6 +58,7 @@
   </main>
 
   <footer class="footer">
+    <div class="footer-brand"><img src="img/logo.svg" alt="" width="28" height="28"><span data-site-name></span></div>
     <nav class="footer-links" aria-label="Footer">
       <a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a>
     </nav>

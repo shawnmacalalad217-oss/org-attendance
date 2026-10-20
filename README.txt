@@ -74,3 +74,16 @@ EVENT TIMES (added)
   locks and the Firestore rules refuse new attendance records.
   (Change the 30 minutes in js/common.js SCAN_EARLY_MINUTES AND in
   firestore.rules scanWindowOpen - keep both the same.)
+
+CONTINUE WITH GOOGLE (added)
+  Firebase console -> Authentication -> Sign-in method -> Google -> Enable.
+  Firebase console -> Authentication -> Settings -> Authorized domains ->
+  add YOUR-USERNAME.github.io (localhost / 127.0.0.1 are usually already there).
+  New Google users are asked for their student number and course & year once.
+
+DESIGN / LOGO (added)
+  img/logo.svg            Logo (header, footer and browser tab icon)
+  img/favicon-32.png      Tab icon for older browsers
+  img/apple-touch-icon.png  Icon when saved to a phone's home screen
+  img/logo-512.png        Large logo for your documentation / slides
+  Colors are set at the top of css/style.css (green, white, light yellow).

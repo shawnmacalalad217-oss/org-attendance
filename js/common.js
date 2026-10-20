@@ -1,7 +1,9 @@
 // Shared code used by every page: Firebase setup, login guard, roles,
 // membership expiry, QR cards and small helpers.
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getAuth, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup,
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { firebaseConfig } from "./firebase-config.js";
 import { SITE_NAME, UNIVERSITY_NAME, CONTACT_EMAIL, DATA_REGION, POLICY_UPDATED } from "./site-config.js";
@@ -134,6 +136,18 @@ function setupNav() {
   navReady = true;
   const page = location.pathname.split("/").pop() || "index.html";
   $$(".nav a").forEach((a) => { if (a.getAttribute("href") === page) a.classList.add("active"); });
+  // Back buttons: go to the previous page of this site if there is one,
+  // otherwise to the button's own link (e.g. opened from a bookmark).
+  $$("[data-back]").forEach((a) => a.addEventListener("click", (e) => {
+    let ref = null;
+    try { ref = document.referrer ? new URL(document.referrer) : null; } catch (_) { ref = null; }
+    const fromHere = ref && ref.origin === location.origin;
+    const fromAuthPage = ref && /(login|signup)\.html$/.test(ref.pathname);
+    if (fromHere && !fromAuthPage && history.length > 1 && ref.href !== location.href) {
+      e.preventDefault();
+      history.back();
+    }
+  }));
   const toggle = $(".nav-toggle");
   const nav = $(".nav");
   if (toggle && nav) {
@@ -176,6 +190,46 @@ export function toast(message, type = "info") {
   setTimeout(() => t.remove(), 4000);
 }
 
+// ---------- Continue with Google ----------
+export async function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+  const cred = await signInWithPopup(auth, provider);
+  return cred.user;
+}
+export function googleErrorMessage(err) {
+  const known = {
+    "auth/popup-closed-by-user": null,           // user closed the window: say nothing
+    "auth/cancelled-popup-request": null,
+    "auth/popup-blocked": "Your browser blocked the Google window. Allow pop-ups for this site and try again.",
+    "auth/unauthorized-domain": "This website's address is not allowed yet. In Firebase: Authentication → Settings → Authorized domains → add it.",
+    "auth/operation-not-allowed": "Google sign-in is turned off in Firebase Authentication.",
+    "auth/network-request-failed": "No internet connection, or Google could not be reached.",
+    "auth/account-exists-with-different-credential": "This email already has an account. Log in with email and password.",
+  };
+  return err.code in known ? known[err.code] : `Google sign-in failed (${err.code || err.message}).`;
+}
+
+// After any login: admin page, finish-profile page, or the requested page.
+export async function goAfterLogin(user, { as = null, next = null } = {}) {
+  if (as === "admin") {
+    const adminSnap = await getDoc(doc(db, "admins", user.uid)).catch(() => null);
+    if (adminSnap && adminSnap.exists()) { window.location.href = "admin.html"; return; }
+    toast("This account is not an admin. Opening your organizations instead.", "error");
+    await new Promise((r) => setTimeout(r, 1500));
+  }
+  const profile = await getDoc(doc(db, "users", user.uid));
+  const target = next && /^[a-z]+\.html/.test(next) ? next : "home.html";
+  if (!profile.exists()) {
+    const adminSnap = await getDoc(doc(db, "admins", user.uid)).catch(() => null);
+    if (!(adminSnap && adminSnap.exists())) {
+      window.location.href = `signup.html?complete=1&next=${encodeURIComponent(target)}`;
+      return;
+    }
+  }
+  window.location.href = target;
+}
+
 // ---------- Login guard ----------
 // Calls onReady(user, profile, isAdmin). Sends logged-out visitors to login.
 export function requireLogin(onReady) {
@@ -192,6 +246,12 @@ export function requireLogin(onReady) {
     ]);
     const profile = profileSnap.exists() ? profileSnap.data() : null;
     const admin = !!(adminSnap && adminSnap.exists());
+    // Signed in (e.g. with Google) but student details not filled in yet.
+    if (!profile && !admin) {
+      const next = encodeURIComponent(location.pathname.split("/").pop() + location.search);
+      window.location.href = `signup.html?complete=1&next=${next}`;
+      return;
+    }
 
     const who = $("#user-name");
     if (who) who.textContent = profile ? profile.fullName : user.email;
@@ -283,7 +343,9 @@ export function renderQrCard(container, { uid, fullName = "", studentNo = "", co
     c.width = W; c.height = H;
     const g = c.getContext("2d");
     g.fillStyle = "#ffffff"; g.fillRect(0, 0, W, H);
-    g.fillStyle = "#137a43"; g.fillRect(0, 0, W, 64);
+    g.fillStyle = "#fdfaf0"; g.fillRect(0, 0, W, H);
+    g.fillStyle = "#1d6b45"; g.fillRect(0, 0, W, 64);
+    g.fillStyle = "#f7d774"; g.fillRect(0, 64, W, 6);
     g.fillStyle = "#ffffff"; g.font = "bold 20px Arial"; g.textAlign = "center";
     g.fillText(SITE_NAME, W / 2, 40);
     g.drawImage(qrCanvas, (W - 280) / 2, 96, 280, 280);
